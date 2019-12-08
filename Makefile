@@ -1,6 +1,8 @@
 .PHONY: deps fmt vet lint test
 
 deps:
+	pwd
+	echo $(GOPATH)
 	go get golang.org/x/lint/golint
 	go get golang.org/x/tools/cmd/goimports
 	go mod download
