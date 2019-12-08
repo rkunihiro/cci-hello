@@ -7,6 +7,10 @@ deps:
 	go get golang.org/x/tools/cmd/goimports
 	go mod download
 
+mysql:
+	sudo apt-get install -y mariadb-client
+	mysql -h mysql -u root --password=rootpass dbname < ./docker/mysql/init/00-create.sql
+
 fmt:
 	go fmt ./... | tee build/gofmt.log
 	test ! -s build/gofmt.log

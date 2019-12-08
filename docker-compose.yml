@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  golang:
+    container_name: cci-hello-golang
+    image: circleci/golang:1.13.5
+    environment:
+      CGO_ENABLED: 0
+      GO111MODULE: "on"
+      DSN: "username:password@tcp(mysql:3306)/dbname?loc=Asia%2FTokyo&parseTime=true"
+    volumes:
+      - ".:/home/circleci/project"
+    working_dir: "/home/circleci/project"
+    tty: true
+  mysql:
+    container_name: cci-hello-mysql
+    image: circleci/mysql:5.7.27
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: dbname
+      MYSQL_USER: teset
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"

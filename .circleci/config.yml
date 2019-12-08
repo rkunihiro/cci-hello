@@ -10,6 +10,14 @@ executors:
           GOOS: linux
           GOARCH: amd64
           GO111MODULE: "on"
+          DSN: "username:password@tcp(mysql:3306)/dbname?loc=Asia%2FTokyo&parseTime=true"
+      - image: circleci/mysql:5.7.27
+        name: mysql
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpass
+          MYSQL_DATABASE: dbname
+          MYSQL_USER: username
+          MYSQL_PASSWORD: password
 
 jobs:
   build:
@@ -19,6 +27,17 @@ jobs:
       - run:
           name: deps
           command: make deps
+      - run:
+          name: install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://mysql:3306 -timeout 1m
+      - run:
+          name: mysql
+          command: make mysql
       - run:
           name: format
           command: make fmt
