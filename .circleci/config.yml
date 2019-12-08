@@ -9,7 +9,7 @@ executors:
           CGO_ENABLED: 0
           GOOS: linux
           GOARCH: amd64
-          GO111MODULE: on
+          GO111MODULE: "on"
 
 jobs:
   build:
