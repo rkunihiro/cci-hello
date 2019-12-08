@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+  builder:
+    docker:
+      - image: circleci/golang:1.13.4
+        name: golang
+        environment:
+          CGO_ENABLED: 0
+          GOOS: linux
+          GOARCH: amd64
+          GO111MODULE: on
+
+jobs:
+  build:
+    executor: builder
+    steps:
+      - checkout
+      - run:
+          name: deps
+          command: make deps
+      - run:
+          name: format
+          command: make fmt
+      - run:
+          name: vet
+          command: make vet
+      - run:
+          name: lint
+          command: make lint
+      - run:
+          name: test
+          command: make test
+
+workflows:
+  version: 2
+  on-push:
+    jobs:
+      - build
